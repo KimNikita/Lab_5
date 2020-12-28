@@ -13,8 +13,9 @@ protected:
   int length;
   T* stack;
   int front;
+  bool f;
 public:
-  TStack(int size = 0);
+  TStack(int size = 0, bool _f = true);
   TStack(const TStack<T>& s);
   ~TStack();
 
@@ -26,6 +27,8 @@ public:
   bool IsEmpty();
   bool IsFull();
   int Length();
+
+  void SetData(T* _x, int size, int front);
 
   template <class T1>
   friend ostream& operator<<(ostream& ostr, const TStack<T1>& S);
@@ -42,14 +45,18 @@ public:
 };
 
 template<class T>
-inline TStack<T>::TStack(int size)
+inline TStack<T>::TStack(int size, bool _f)
 {
   if (size < 0)
     throw exception();
   this->length = size;
-  this->stack = new T[size];
-  for (int i = 0; i < size; i++)
-    this->stack[i] = 0;
+  this->f = _f;
+  if (f)
+  {
+    this->stack = new T[size];
+    for (int i = 0; i < size; i++)
+      this->stack[i] = 0;
+  }
   this->front = -1;
 }
 
@@ -58,18 +65,27 @@ inline TStack<T>::TStack(const TStack<T>& s)
 {
   this->length = s.length;
   this->front = s.front;
-  this->stack = new T[s.length];
-  for (int i = 0; i < s.length; i++)
-    this->stack[i] = s.stack[i];
+  this->f = s.f;
+  if (f)
+  {
+    this->stack = new T[s.length];
+    for (int i = 0; i < s.length; i++)
+      this->stack[i] = s.stack[i];
+  }
+  else
+    this->stack = s.stack;
 }
 
 template<class T>
 inline TStack<T>::~TStack()
 {
   this->length = 0;
-  if (this->stack != 0)
-    delete[] this->stack;
-  this->stack = 0;
+  if (f)
+  {
+    if (this->stack != 0)
+      delete[] this->stack;
+    this->stack = 0;
+  }
 }
 
 template<class T>
@@ -77,15 +93,21 @@ inline TStack<T>& TStack<T>::operator=(const TStack<T>& s)
 {
   if (this == &s)
     return *this;
-  if (this->length != s.length)
+  this->f = s.f;
+  if (f)
   {
-    this->length = s.length;
-    delete[] this->stack;
-    this->stack = new T[s.length];
+    if (this->length != s.length)
+    {
+      this->length = s.length;
+      delete[] this->stack;
+      this->stack = new T[s.length];
+    }
+    this->front = s.front;
+    for (int i = 0; i < s.length; i++)
+      this->stack[i] = s.stack[i];
   }
-  this->front = s.front;
-  for (int i = 0; i < s.length; i++)
-    this->stack[i] = s.stack[i];
+  else
+    this->stack = s.stack;
   return *this;
 }
 
@@ -132,6 +154,18 @@ template<class T>
 inline int TStack<T>::Length()
 {
   return this->length;
+}
+
+template<class T>
+inline void TStack<T>::SetData(T* _x, int size, int front)
+{
+  if (f)
+    delete[] stack;
+
+  this->length = size;
+  f = false;
+  this->stack = _x;
+  this->front = front;
 }
 
 template <class T1>
