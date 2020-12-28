@@ -78,7 +78,7 @@ inline TMultiStack<T>::TMultiStack(const TMultiStack<T>& ms)
   for (int i = 0; i < length; i++)
     this->data[i] = ms.data[i];
 
-  this->stacks[i] = new TStack<T>[stackCount];
+  this->stacks = new TStack<T>[stackCount];
   for (int i = 0; i < stackCount; i++)
     this->stacks[i] = ms.stacks[i][i];
 }
@@ -110,7 +110,7 @@ inline TMultiStack<T>& TMultiStack<T>::operator=(const TMultiStack<T>& ms)
     delete[] this->data;
     delete[] this->stacks;
     this->data = new T[length];
-    this->stacks = new TStack<T>[stackCount]
+    this->stacks = new TStack<T>[stackCount];
   }
 
   for (int i = 0; i < length; i++)
@@ -145,7 +145,7 @@ inline T TMultiStack<T>::Get(int ind)
   if (ind < 0 || ind >= stackCount)
     throw - 1;
 
-  return stacks[ind].Get(n);
+  return stacks[ind].Get();
 }
 
 template<class T>
@@ -154,7 +154,7 @@ inline bool TMultiStack<T>::IsEmpty(int ind)
   if (ind < 0 || ind >= stackCount)
     throw - 1;
 
-  return stacks[ind].IsEmpty(n);
+  return stacks[ind].IsEmpty();
 }
 
 template<class T>
@@ -163,7 +163,7 @@ inline bool TMultiStack<T>::IsFull(int ind)
   if (ind < 0 || ind >= stackCount)
     throw - 1;
 
-  return stacks[ind].IsFull(n);
+  return stacks[ind].IsFull();
 }
 
 template<class T>
@@ -205,9 +205,9 @@ template<class T>
 inline int TMultiStack<T>::GetMinStack()
 {
   int mins = 0;
-  for (int i = 1; i < MS.stackCount; i++)
-    if (MS.stacks[i].front + 1 < mins)
-      mins = MS.stacks[i].front + 1;
+  for (int i = 1; i < stackCount; i++)
+    if (stacks[i].front + 1 < mins)
+      mins = stacks[i].front + 1;
   return mins;
 }
 
