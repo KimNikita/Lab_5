@@ -27,6 +27,7 @@ public:
   bool IsEmpty();
   bool IsFull();
   int Length();
+  int Count();
 
   void SetData(T* _x, int size, int front);
 
@@ -154,6 +155,12 @@ template<class T>
 inline int TStack<T>::Length()
 {
   return this->length;
+}
+
+template<class T>
+inline int TStack<T>::Count()
+{
+  return front + 1;
 }
 
 template<class T>

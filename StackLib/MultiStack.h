@@ -206,8 +206,8 @@ inline int TMultiStack<T>::GetMinStack()
 {
   int mins = 0;
   for (int i = 1; i < stackCount; i++)
-    if (stacks[i].front + 1 < mins)
-      mins = stacks[i].front + 1;
+    if (stacks[i].Count() < mins)
+      mins = stacks[i].Count();
   return mins;
 }
 
